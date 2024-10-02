@@ -19,18 +19,11 @@ public class CargaPr {
                 System.out.println("El archivo no existe. Creando con valores predeterminados.");
                 salida = new FileOutputStream(archivo);
 
-                propiedades.setProperty("Raza1a", "PerroPastor");
-                propiedades.setProperty("Origen1a", "Alemania");
-                propiedades.setProperty("Raza1b", "PerroBoyero");
-                propiedades.setProperty("Origen1b", "Australia");
-                propiedades.setProperty("Raza2a", "PerroPincher");
-                propiedades.setProperty("Origen2a", "Alemania");
-                propiedades.setProperty("Raza2b", "PerroSchnauzer");
-                propiedades.setProperty("Origen2b", "Alemania");
-                propiedades.setProperty("Raza2c", "PerroMolosoide");
-                propiedades.setProperty("Origen2c", "Italia");
-                propiedades.setProperty("Raza2d", "PerroBoyeroSuizo");
-                propiedades.setProperty("Origen2d", "Suiza");
+                propiedades.setProperty("Raza1.Grupo", "Perros de pastor y perros boyeros (menos Boyeros Suizos)");
+                propiedades.setProperty("Raza1.SeccionGrupo", "PerroPastor");
+                propiedades.setProperty("Raza1.SeccionGrupo.PerroPastor.Origen", "Alemania");
+                propiedades.setProperty("Raza1.SeccionGrupo", "PerroBoyero");
+                propiedades.setProperty("Raza1.SeccionGrupo.PerroBoyero.Origen", "Australia");
 
                 propiedades.store(salida, "Propiedades precargadas");
                 System.out.println("Archivo creado con valores predeterminados.");
