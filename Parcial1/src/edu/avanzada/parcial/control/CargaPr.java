@@ -16,7 +16,7 @@ public class CargaPr {
             File archivo = new File("src/data/config.properties");
 
             if (!archivo.exists()) {
-                System.out.println("El archivo no existe. Creando con valores predeterminados.");
+                System.out.println("El archivo no existe...Creando con valores predeterminados");
                 salida = new FileOutputStream(archivo);
 
                 propiedades.setProperty("Raza1.Grupo", "Perros de pastor y perros boyeros (menos Boyeros Suizos)");
@@ -48,9 +48,9 @@ public class CargaPr {
                 propiedades.setProperty("Raza4.SeccionGrupo.PerroDachshund.Origen", "Alemania");
 
                 propiedades.store(salida, "Propiedades precargadas");
-                System.out.println("Archivo creado con valores predeterminados.");
+                System.out.println("Archivo creado con valores predeterminados");
             } else {
-                System.out.println("El archivo 'config.properties' ya existe.");
+                System.out.println("El archivo 'config.properties' ya existe");
             }
 
         } catch (IOException io) {
