@@ -97,7 +97,6 @@ public class ConexionPr {
 
         } catch (IOException | SQLException e) {
         e.printStackTrace();
-        //findelpuntoab
         }
     }
 }
