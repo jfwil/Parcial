@@ -37,7 +37,7 @@ public class ConexionPr {
     }
     
     public void crearBaseDatos() {
-    Properties propiedades = new Properties();
+        Properties propiedades = new Properties();
 
     try {
         FileInputStream entrada = new FileInputStream("C:/Users/Usuario/Documents/NetBeansProjects/Branch3/src/main/java/data/config.properties");
@@ -49,14 +49,12 @@ public class ConexionPr {
 
         // Crear la base de datos si no existe
         String crearBD = "CREATE DATABASE IF NOT EXISTS PerrosDB";
-        System.out.println("Ejecutando: " + crearBD); // Depuración
         stmt.executeUpdate(crearBD);
         System.out.println("Base de datos PerrosDB creada o existente");
 
         // Cerrar la conexión actual y volver a conectarse a la nueva base de datos
         desconectar();
         conn = DriverManager.getConnection(URL + "PerrosDB", USER, PASS);
-        System.out.println("Conectado a la base de datos PerrosDB");
 
         // Crear la tabla
         stmt = conn.createStatement();
@@ -65,17 +63,13 @@ public class ConexionPr {
                 + "grupo VARCHAR(255), "
                 + "seccionGrupo VARCHAR(255), "
                 + "origen VARCHAR(255))";
-        System.out.println("Ejecutando: " + crearTabla); // Depuración
         stmt.executeUpdate(crearTabla);
         System.out.println("Tabla Razas creada o existente");
 
         // Insertar los datos desde el archivo de propiedades
         for (int i = 1; i <= 15; i++) { // Hasta 15 grupos
             String grupo = propiedades.getProperty("Raza" + i + ".Grupo");
-            if (grupo == null) {
-                System.out.println("No se encontró el grupo para Raza" + i); // Depuración
-                continue;
-            }
+            if (grupo == null) continue;
 
             for (int j = 1; j <= 20; j++) { // Hasta 20 subgrupos por grupo
                 String seccionGrupo = propiedades.getProperty("Raza" + i + ".SeccionGrupo" + j);
@@ -83,16 +77,15 @@ public class ConexionPr {
                     break; // Si no hay más secciones, salir del bucle
                 }
 
-                // Acceder al origen de la sección
-                String origen = propiedades.getProperty("Raza" + i + ".SeccionGrupo" + j + ".Origen");
+                // Acceder al origen de la sección, ajustando la clave
+                String origen = propiedades.getProperty("Raza" + i + ".SeccionGrupo" + j + "." + seccionGrupo + ".Origen");
 
                 if (origen != null) {
                     String insertarDatos = "INSERT INTO Razas (grupo, seccionGrupo, origen) VALUES ('"
                             + grupo + "', '" + seccionGrupo + "', '" + origen + "')";
-                    System.out.println("Ejecutando: " + insertarDatos); // Depuración
                     stmt.executeUpdate(insertarDatos);
                 } else {
-                    System.out.println("No se encontró el origen para Raza" + i + " SeccionGrupo" + j); // Depuración
+                    System.out.println("No se encontró el origen para Raza" + i + " SeccionGrupo" + j);
                 }
             }
         }
@@ -102,8 +95,8 @@ public class ConexionPr {
         stmt.close();
         desconectar();
 
-    } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException e) {
         e.printStackTrace();
+        }
     }
-}
 }
