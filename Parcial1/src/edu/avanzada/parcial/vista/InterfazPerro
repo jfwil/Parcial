@@ -1,261 +1,156 @@
-package Vista;
-public class InterfazPerros extends javax.swing.JFrame {
+package edu.avanzada.parcial.vista; // Paquete que contiene la clase de la vista
 
+import edu.avanzada.parcial.control.ControlPerro; // Importa la clase ControlPerro que maneja la lógica de negocio
+import edu.avanzada.parcial.modelo.Perro; // Importa la clase Perro que representa la entidad perro
+import javax.swing.*; // Importa las clases de Swing para crear la interfaz gráfica
+import java.awt.*; // Importa las clases de AWT para la gestión de componentes de la interfaz
+import java.awt.event.ActionEvent; // Importa ActionEvent para manejar eventos de acción
+import java.awt.event.ActionListener; // Importa ActionListener para escuchar acciones en los botones
+import java.util.List; // Importa la clase List para manejar listas de perros
 
-    public InterfazPerros() {
-        initComponents();
+public class InterfazPerro extends JFrame { // Declara la clase que extiende JFrame para crear la ventana principal
+    private JTextField txtRaza; // Campo de texto para ingresar la raza del perro
+    private JTextField txtOrigen; // Campo de texto para ingresar el origen del perro
+    private JComboBox<String> cbGrupo; // ComboBox para seleccionar el grupo del perro
+    private JComboBox<String> cbSeccion; // ComboBox para seleccionar la sección del perro
+    private JButton btnInsertar; // Botón para insertar un nuevo perro
+    private JButton btnConsultar; // Botón para consultar detalles de un perro
+    private JButton btnEliminar; // Botón para eliminar un perro seleccionado
+    private JButton btnModificar; // Botón para modificar los detalles de un perro
+    private JButton btnLimpiar; // Botón para limpiar los campos de entrada
+    private JButton btnSalir; // Botón para salir de la aplicación
+    private JList<Perro> listPerros; // Lista para mostrar las razas de perros
+    private DefaultListModel<Perro> listModel; // Modelo de lista para gestionar los elementos de listPerros
+    private ControlPerro controlPerro; // Instancia de ControlPerro para manejar la lógica de negocio
+
+    public InterfazPerro() { // Constructor de la clase
+        controlPerro = new ControlPerro(); // Inicializa la instancia de ControlPerro
+        setTitle("Gestión de Razas de Perros"); // Establece el título de la ventana
+        setSize(400, 400); // Establece el tamaño de la ventana
+        setDefaultCloseOperation(EXIT_ON_CLOSE); // Cierra la aplicación al cerrar la ventana
+        setLayout(new FlowLayout()); // Establece el diseño de la ventana como un flujo
+
+        txtRaza = new JTextField(15); // Crea un campo de texto para la raza con un ancho de 15 columnas
+        txtOrigen = new JTextField(15); // Crea un campo de texto para el origen con un ancho de 15 columnas
+        cbGrupo = new JComboBox<>(new String[]{"Grupo 1", "Grupo 2", "Grupo 3"}); // Crea un ComboBox para grupos
+        cbSeccion = new JComboBox<>(new String[]{"Sección A", "Sección B", "Sección C"}); // Crea un ComboBox para secciones
+
+        btnInsertar = new JButton("Insertar"); // Crea el botón de insertar
+        btnConsultar = new JButton("Consultar"); // Crea el botón de consultar
+        btnEliminar = new JButton("Eliminar"); // Crea el botón de eliminar
+        btnModificar = new JButton("Modificar"); // Crea el botón de modificar
+        btnLimpiar = new JButton("Limpiar"); // Crea el botón de limpiar
+        btnSalir = new JButton("Salir"); // Crea el botón de salir
+
+        listModel = new DefaultListModel<>(); // Inicializa el modelo de lista
+        listPerros = new JList<>(listModel); // Crea una lista de perros usando el modelo
+
+        // Agrega etiquetas y campos de entrada a la ventana
+        add(new JLabel("Raza:")); // Agrega una etiqueta para el campo de raza
+        add(txtRaza); // Agrega el campo de texto para la raza
+        add(new JLabel("Origen:")); // Agrega una etiqueta para el campo de origen
+        add(txtOrigen); // Agrega el campo de texto para el origen
+        add(new JLabel("Grupo:")); // Agrega una etiqueta para el ComboBox de grupo
+        add(cbGrupo); // Agrega el ComboBox de grupo
+        add(new JLabel("Sección:")); // Agrega una etiqueta para el ComboBox de sección
+        add(cbSeccion); // Agrega el ComboBox de sección
+        add(btnInsertar); // Agrega el botón de insertar
+        add(btnConsultar); // Agrega el botón de consultar
+        add(btnEliminar); // Agrega el botón de eliminar
+        add(btnModificar); // Agrega el botón de modificar
+        add(btnLimpiar); // Agrega el botón de limpiar
+        add(btnSalir); // Agrega el botón de salir
+        add(new JScrollPane(listPerros)); // Agrega la lista de perros dentro de un JScrollPane
+
+        // Agrega el listener para el botón de insertar
+        btnInsertar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                insertarPerro(); // Llama al método para insertar un perro
+            }
+        });
+
+        // Agrega el listener para el botón de consultar
+        btnConsultar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarPerro(); // Llama al método para consultar un perro
+            }
+        });
+
+        // Agrega el listener para el botón de eliminar
+        btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eliminarPerro(); // Llama al método para eliminar un perro
+            }
+        });
+
+        // Agrega el listener para el botón de modificar
+        btnModificar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modificarPerro(); // Llama al método para modificar un perro
+            }
+        });
+
+        // Agrega el listener para el botón de limpiar
+        btnLimpiar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limpiarCampos(); // Llama al método para limpiar los campos de entrada
+            }
+        });
+
+        // Agrega el listener para el botón de salir
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                salir(); // Llama al método para salir de la aplicación
+            }
+        });
     }
 
-    
-    @SuppressWarnings("unchecked")
-                        
-    private void initComponents() {
-
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
-
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable1);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel4.setFont(new java.awt.Font("Agency FB", 0, 24)); // NOI18N
-        jLabel4.setText("¡Nos alegra tenerte aquí!");
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/perros.jpg"))); // NOI18N
-
-        jButton1.setBackground(new java.awt.Color(0, 51, 102));
-        jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Insertar Raza");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setBackground(new java.awt.Color(0, 51, 102));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Consultar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setBackground(new java.awt.Color(0, 51, 102));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Eliminar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setBackground(new java.awt.Color(0, 51, 102));
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Modificar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jButton5.setBackground(new java.awt.Color(51, 255, 0));
-        jButton5.setText("Serializar");
-
-        jButton6.setBackground(new java.awt.Color(255, 0, 51));
-        jButton6.setText("Salir");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText("Haz click en la opción que desees usar:");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(54, 54, 54)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/download (1).jpeg"))); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        pack();
-    }// </editor-fold>                        
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-      Insertar insert = new Insertar (this, true);
-      insert.setVisible(true);
-    }                                        
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       Consultar consul = new Consultar (this, true);
-       consul.setVisible(true);
-    }                                        
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-     this.dispose();
-    }                                        
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       Modificar modif = new Modificar (this, true);
-       modif.setVisible(true);    }                                        
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
- 
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfazPerros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfazPerros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfazPerros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfazPerros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void insertarPerro() { // Método para insertar un nuevo perro
+        String raza = txtRaza.getText(); // Obtiene el texto del campo de raza
+        String origen = txtOrigen.getText(); // Obtiene el texto del campo de origen
+        String grupo = (String) cbGrupo.getSelectedItem(); // Obtiene el grupo seleccionado
+        String seccion = (String) cbSeccion.getSelectedItem(); // Obtiene la sección seleccionada
+        
+        Perro perro = new Perro(raza, origen, grupo, seccion); // Crea un nuevo objeto Perro
+        if (controlPerro.insertarPerro(perro)) { // Intenta insertar el perro en el control
+            listModel.addElement(perro); // Agrega el perro al modelo de lista
+            JOptionPane.showMessageDialog(this, "Perro insertado correctamente."); // Muestra un mensaje de éxito
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: Perro ya existe."); // Muestra un mensaje de error
         }
-      
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InterfazPerros().setVisible(true);
-            }
-        });
     }
 
-                    
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-                     
-}
+    private void consultarPerro() { // Método para consultar un perro por raza
+        String raza = txtRaza.getText(); // Obtiene el texto del campo de raza
+        Perro perro = controlPerro.consultarPerro(raza); // Consulta el perro usando el control
+        if (perro != null) { // Si se encuentra el perro
+            JOptionPane.showMessageDialog(this, perro); // Muestra los detalles del perro
+        } else {
+            JOptionPane.showMessageDialog(this, "Perro no encontrado."); // Muestra mensaje si no se encuentra
+        }
+    }
+
+    private void eliminarPerro() { // Método para eliminar un perro
+        Perro selectedPerro = listPerros.getSelectedValue(); // Obtiene el perro seleccionado de la lista
+        if (selectedPerro != null) { // Si hay un perro seleccionado
+            if (controlPerro.eliminarPerro(selectedPerro.getRaza())) { // Intenta eliminar el perro en el control
+                listModel.removeElement(selectedPerro); // Elimina el perro del modelo de lista
+                JOptionPane.showMessageDialog(this, "Perro eliminado."); // Muestra mensaje de éxito
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar."); // Muestra mensaje de error
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un perro para eliminar."); // Pide seleccionar un perro
+        }
+    }
+
+    private void modificarPerro() { // Método para modificar un perro
+        Perro selectedPerro = listPerros.getSelectedValue(); // Obtiene el perro seleccionado de la lista
+        if (selectedPerro != null) { // Si hay un perro seleccionado
+            String origen = txtOrigen.getText(); //
