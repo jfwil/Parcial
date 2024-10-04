@@ -9,44 +9,52 @@ import java.util.List;
 
 public class PerroDAOIMP implements PerroDAO {
 
-    private Connection con;
+    private Connection conn;
     private Statement st;
     private ResultSet rs;
+    //instancia de la clase conexion pr que luego se inicializa en el const
+    private ConexionPr conexion;
 
     public PerroDAOIMP() {
-        con = null;
+        conn = null;
         st = null;
         rs = null;
+        conexion = new ConexionPr();
     }
 
     public void insertarPerro(Perro perro) throws SQLException {
 
         try {
-            con = Conexion.getConexion();
-            st = con.createStatement();
-            String insertar = "INSERT INTO Perros (raza, pais, grupoFCI, seccionFCI, apariencia, pelo, color, espalda, lomo, cola, pecho)";
+            conexion.conectar();
+            conn = conexion.conn;
+            st = conn.createStatement();
+            
+            String insertar = "INSERT INTO Perros (Raza, Origen, Grupo, SeccionGrupo, Apariencia, Pelo, Color, Espalda, Lomo, Cola, Pecho)";
             st.executeUpdate(insertar);
             st.close();
-            Conexion.desconectar();
+            conexion.desconectar();
         } catch (SQLException ex) {
-            System.out.print("No se pudo realizar la insercion");
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.print("No se pudo realizar la insercion");
         }
     }
 
     @Override
-    public Perro consultarPerro(String codigo) {
+    public Perro consultarPerro(String Raza) {
         Perro perro = null;
-        String consulta = "";
+        String consulta = "SELECT * FROM Perros WHERE Raza = '" + Raza + "'";;
         try {
-            con = (Connection) Conexion.getConexion();
-            st = con.createStatement();
+            conexion.conectar();
+            conn = conexion.conn;
+            st = conn.createStatement();
             rs = st.executeQuery(consulta);
             if (rs.next()) {
                 perro = new Perro();
                 perro.setRaza(rs.getString("Raza"));
-                perro.setPais(rs.getString("Pais"));
-                perro.setGrupoFCI(rs.getString("Grupo"));
-                perro.setSeccionFCI(rs.getString("Seccion"));
+                perro.setOrigen(rs.getString("Origen"));
+                perro.setGrupo(rs.getString("Grupo"));
+                perro.setSeccionGrupo(rs.getString("SeccionGrupo"));
+                perro.setApariencia(rs.getString("Apariencia"));
                 perro.setPelo(rs.getString("Pelo"));
                 perro.setColor(rs.getString("Color"));
                 perro.setEspalda(rs.getString("Espalda"));
@@ -55,9 +63,10 @@ public class PerroDAOIMP implements PerroDAO {
                 perro.setPecho(rs.getString("Pecho"));
             }
             st.close();
-            Conexion.desconectar();
+            conexion.desconectar();
         } catch (SQLException ex) {
-            System.out.println("No se pudo realizar la consulta");
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("No se pudo realizar la consulta");
         }
         return perro;
     }
@@ -66,15 +75,16 @@ public class PerroDAOIMP implements PerroDAO {
         ArrayList<Perro> misPerros = new ArrayList<Perro>();
         String consulta = "SELECT * FROM PERROS";
         try {
-            con = Conexion.getConexion();
-            st = con.createStatement();
+            conexion.conectar();
+            conn = conexion.conn;
             rs = st.executeQuery(consulta);
             while (rs.next()) {
                 Perro perro = new Perro();
                 perro.setRaza(rs.getString("Raza"));
-                perro.setPais(rs.getString("Pais"));
-                perro.setGrupoFCI(rs.getString("Grupo"));
-                perro.setSeccionFCI(rs.getString("Seccion"));
+                perro.setOrigen(rs.getString("Origen"));
+                perro.setGrupo(rs.getString("Grupo"));
+                perro.setSeccionGrupo(rs.getString("SeccionGrupo"));
+                perro.setApariencia(rs.getString("Apariencia"));
                 perro.setPelo(rs.getString("Pelo"));
                 perro.setColor(rs.getString("Color"));
                 perro.setEspalda(rs.getString("Espalda"));
@@ -84,28 +94,30 @@ public class PerroDAOIMP implements PerroDAO {
                 misPerros.add(perro);
             }
             st.close();
-            Conexion.desconectar();
+            conexion.desconectar();
         } catch (SQLException ex) {
-            System.out.println("No se pudo realizar la consulta");
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("No se pudo realizar la consulta");
         }
         return misPerros;
     }
 
-    public List<Perro> consultarTodosPerros(){
+    public List<Perro> consultarTodosPerros() {
         List<Perro> listaPerros = new ArrayList<>();
         String consulta = "SELECT * FROM Perros";
 
         try {
-            con = Conexion.getConexion();
-            st = con.createStatement();
+            conexion.conectar();
+            conn = conexion.conn;
             rs = st.executeQuery(consulta);
 
             while (rs.next()) {
                 Perro perro = new Perro();
                 perro.setRaza(rs.getString("Raza"));
-                perro.setPais(rs.getString("Pais"));
-                perro.setGrupoFCI(rs.getString("Grupo"));
-                perro.setSeccionFCI(rs.getString("Seccion"));
+                perro.setOrigen(rs.getString("Origen"));
+                perro.setGrupo(rs.getString("Grupo"));
+                perro.setSeccionGrupo(rs.getString("SeccionGrupo"));
+                perro.setApariencia(rs.getString("apariencia"));
                 perro.setPelo(rs.getString("Pelo"));
                 perro.setColor(rs.getString("Color"));
                 perro.setEspalda(rs.getString("Espalda"));
@@ -116,45 +128,49 @@ public class PerroDAOIMP implements PerroDAO {
 
             }
             st.close();
-            Conexion.desconectar();
+            conexion.desconectar();
 
         } catch (SQLException ex) {
-            System.out.println("Error al consultar todos los perros: " + ex.getMessage());
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("Error al consultar todos los perros: " + ex.getMessage());
         }
 
         return listaPerros;
     }
 
-    public boolean eliminarPerro(String raza) {
-        String consulta = "DELETE FROM Perros where raza='" + raza + "'";
+    public boolean eliminarPerro(String Raza) {
+        String consulta = "DELETE FROM Perros where raza='" + Raza + "'";
         try {
-            con = Conexion.getConexion();
-            st = con.createStatement();
+            conexion.conectar();
+            conn = conexion.conn;
             st.executeUpdate(consulta);
             st.close();
-            Conexion.desconectar();
+            conexion.desconectar();
             return true;
         } catch (SQLException ex) {
-            System.out.println("No se pudo realizar la eliminacion");
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("No se pudo realizar la eliminacion");
         }
         return false;
     }
-    
+
     public void modificarPerro(Perro perro) {
-        
-        String actualizar = "UPDATE Perros SET pais='" + perro.getPais() + "', grupoFCI='" + perro.getGrupoFCI() + "', seccionFCI='" + perro.getSeccionFCI() + "', "
-            + "pelo='" + perro.getPelo() + "', color='" + perro.getColor() + "', espalda='" + perro.getEspalda() + "', lomo='" + perro.getLomo() + "', "
-            + "cola='" + perro.getCola() + "', pecho='" + perro.getPecho() + "' WHERE raza='" + perro.getRaza() + "'";
+
+        String actualizar = "UPDATE Perros SET Origen='" + perro.getOrigen() + "', grupoFCI='" + perro.getGrupo() + "', SeccionFCI='" + perro.getSeccionGrupo() + "', " + "', Apariencia='" + perro.getApariencia() + "', "
+                +"Pelo='" + perro.getPelo() + "', Color='" + perro.getColor() + "', Espalda='" + perro.getEspalda() + "', Lomo='" + perro.getLomo() + "', "
+                + "Cola='" + perro.getCola() + "', Pecho='" + perro.getPecho() + "' WHERE origen='" + perro.getOrigen() + "'";
         try {
-            con = Conexion.getConexion();
-            st = con.createStatement();
+            conexion.conectar();
+            conn = conexion.conn;
             st.executeUpdate(actualizar);
             st.close();
-            Conexion.desconectar();
-            System.out.println("Modificacion hecha");
+            conexion.desconectar();
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("Modificacion hecha");
         } catch (SQLException ex) {
-            System.out.println("No se pudo realizar la modifcacion");
+            //ACA PONER IMPLEMENTACION INTERFAZ GRAFICA
+            //System.out.println("No se pudo realizar la modifcacion");
         }
     }
-    
+
 }

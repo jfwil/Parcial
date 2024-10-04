@@ -1,20 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
-package edu.avanzada.parcial.control;
+package edu.avanzada.parcial.vista;
 
-/**
- *
- * @author asfak
- */
+import edu.avanzada.parcial.control.CargaPr;
+import edu.avanzada.parcial.modelo.ConexionPr;
+
+
+
 public class Launcher {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+            
+        ConexionPr conexionpr = new ConexionPr();
+        
+        CargaPr.cargarPropiedadesIniciales();
+        conexionpr.crearBaseDatos();
+        
+        VistaPerro vista = new VistaPerro();
+        
+        vista.mostrarMenu();
+        
     }
-    
 }
